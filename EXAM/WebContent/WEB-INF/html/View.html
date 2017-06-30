@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.1/angular.min.js">
+	
+</script>
+<!-- <!-- <script>
+        var app = angular.module("schedule", []);
+        app.controller("ctrl", function($scope){
+            console.log("App controller");
+            
+            
+            $scope.add = function (){
+                console.log("Function is running");
+                $scope.result = $scope.a * $scope.b;
+                console.log($scope.result);
+            }
+        }); -->
+   
+<script>
+	var app = angular.module("schedule", []);
+
+	app
+			.controller(
+					"ctrl",
+					function($http, $scope) {
+
+						$scope.viewScheduleMethod = function() {
+							console.log("inside");
+							$http(								
+									{
+										
+										url : "/BaseCodeSlice_BankManagementSystem/viewSchedule?startDate="
+												+ $scope.startDate,
+										method : "get"
+									}).success(function(res) {
+										console.log("Inside the success"+res);
+										$scope.result=res
+										$scope.flag = true;
+										
+							}).error(function() {
+								console.log("error in page");
+							});
+						}
+					})
+</script> 
+</head>
+<body ng-App="schedule">
+	<div ng-controller="ctrl">
+		<h3>Show Weekly Schedule Detail</h3>
+		<form method="Get" ng-submit="viewScheduleMethod()" ng-hide=flag>
+			Start date: <input type="text" name="startDate" ng-model="startDate" />
+			<input type="Submit" value="Submit" />
+		</form>
+		<div ng-if=flag>
+			<h3>Display</h3>
+			<table>
+				<tr>
+					<th>Trainer</th>
+					<th>College</th>
+
+					<th>Domain</th>
+					<th>Date</th>
+					<th>Duration</th>
+				</tr>
+				<tr ng-repeat="schedule in result track by $index">
+					<td>{{schedule.trainerInfo.trainerName}}</td>
+					<td>{{schedule.trainerInfo.collegeName}}</td>
+					<td>{{schedule.trainerInfo.domain}}</td>
+					<td>{{schedule.stratDate | date: dd/MM/yyyy}}</td>
+					<td>{{schedule.duration}}</td>
+				</tr>
+
+			</table>
+		</div>
+	</div>
+</body>
+</html>
